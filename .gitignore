@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Secrets & local config (テンプレは .env.example をコミット)
+.env
+.env.local
+.env.*.local
+.mcp.json
+
+# Runtime logs
+logs/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
