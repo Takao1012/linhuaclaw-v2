@@ -86,8 +86,8 @@ MODEL_TASK=deepseek/deepseek-v3.2            # タスク実行
 BLOG_SITE_URL=https://linhua-blog.com
 
 # Craft設定
-CRAFT_FOLDER_ID=3448dd80-19fb-93a3-fe46-acbc654ea267        # 週次キャッチアップ
-CRAFT_DAILY_FOLDER_ID=5c1aa244-0a81-f655-9071-f0174a5e1583  # デイリーキャッチアップ
+CRAFT_FOLDER_ID=xxxxxxxxxx  # 週次キャッチアップ
+CRAFT_DAILY_FOLDER_ID=xxxxxxxxxx  # デイリーキャッチアップ
 ```
 
 ---
