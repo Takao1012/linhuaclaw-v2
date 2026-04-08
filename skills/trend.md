@@ -1,12 +1,12 @@
 # 百合漫画SNSトレンド収集 Skill
 
 ## 概要
-Bluesky・Reddit・noteから百合漫画の今週のトレンドを収集し、簡潔に要約する。
+Bluesky・Reddit・note・X（旧Twitter）から百合漫画の今週のトレンドを収集し、簡潔に要約する。
 
 ## 重要な制約
 - Craftへの保存・ドキュメント作成は絶対にしない
 - テキストで結果を返すだけでよい
-- 使用するMCPツール: bluesky-mcp・reddit・note-searchのみ
+- 使用するMCPツール: bluesky-mcp・reddit・note-search・x-mcp
 
 ## 手順
 
@@ -21,7 +21,16 @@ search_subreddit で yuri_manga を検索（sort="top", time="week"）
 ### Step 3: note検索
 search_note_by_tag で「百合漫画」を検索
 
-### Step 4: 要約出力（テキストのみ返す）
+### Step 4: X（旧Twitter）検索
+search_recent_tweets で「百合漫画」を検索
+- 取得件数: 10件
+- 以下は除外する:
+  - プロモーション・広告投稿
+  - リツイートのみの投稿
+  - URLのみの投稿
+- いいね数・RT数が高い投稿を優先して抽出する
+
+### Step 5: 要約出力（テキストのみ返す）
 以下の形式でまとめてテキストで返す：
 
 ## 🐦 SNSトレンド {YYYY-MM-DD}週
@@ -35,6 +44,7 @@ search_note_by_tag で「百合漫画」を検索
 （日本語圏・英語圏の反応を一言でまとめる）
 
 **注目ポスト:**
-- 内容（ソース: Bluesky/Reddit/note）
+- 内容（ソース: Bluesky/Reddit/note/X）
 
+X MCPが利用できない場合はスキップしてその旨を記載する。
 データが少ない場合は取得できたソースのみで要約する。

@@ -1,6 +1,6 @@
 import * as readline from 'readline';
 import { AgentContext, runAgent } from './agent.js';
-import { runNews, runTrend, runSeo, runSale, runRanking, runYurinaviNews, runWeekly, runDaily } from './tasks/index.js';
+import { runNews, runTrend, runSale, runRanking, runYurinaviNews, runWeekly, runDaily } from './tasks/index.js';
 import { saveToCraft, saveDailyToCraft } from './craft.js';
 
 const COMMAND_PROMPT = `あなたはLinhuaClaw v2のコマンド判断AIです。
@@ -39,10 +39,6 @@ function printHelp(): void {
   SNSトレンド:
     「Blueskyの百合トレンドを教えて」
     「今週の百合SNSの動向は？」
-
-  SEOデータ:
-    「今週のSEOを確認して」
-    「検索順位はどう？」
 
   セール情報:
     「百合ナビのニュースを教えて」
@@ -175,9 +171,6 @@ async function executeCommand(
     case 'trend':
       console.log(await runTrend(ctx));
       break;
-    case 'seo':
-      console.log(await runSeo(ctx));
-      break;
     case 'sale':
       console.log(await runSale(ctx));
       break;
@@ -195,7 +188,6 @@ async function executeCommand(
       } else {
         console.log('\n--- ニュース ---\n' + results.news);
         console.log('\n--- トレンド ---\n' + results.trend);
-        console.log('\n--- SEO ---\n' + results.seo);
         console.log('\n--- セール ---\n' + results.sale);
         console.log('\n--- ランキング ---\n' + results.ranking);
         console.log('\n--- 百合ナビニュース ---\n' + results.yurinaviNews);

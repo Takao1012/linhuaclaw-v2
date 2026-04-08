@@ -4,7 +4,7 @@ import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 export async function saveToCraft(
   craftClient: Client,
   weekLabel: string,
-  contents: { news: string; trend: string; seo: string; sale: string; ranking: string; yurinaviNews: string }
+  contents: { news: string; trend: string; sale: string; ranking: string; yurinaviNews: string }
 ): Promise<void> {
   console.log('\n📝 Craftに保存中...');
 
@@ -33,7 +33,7 @@ export async function saveToCraft(
   const docId = idMatch[1];
 
   // コンテンツを追加
-  const markdown = `${contents.news}\n\n---\n\n${contents.trend}\n\n---\n\n${contents.seo}\n\n---\n\n${contents.sale}\n\n---\n\n${contents.ranking}\n\n---\n\n${contents.yurinaviNews}`;
+  const markdown = `${contents.news}\n\n---\n\n${contents.trend}\n\n---\n\n${contents.sale}\n\n---\n\n${contents.ranking}\n\n---\n\n${contents.yurinaviNews}`;
 
   await craftClient.callTool({
     name: 'markdown_add',

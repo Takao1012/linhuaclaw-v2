@@ -9,7 +9,6 @@
     "weekly": "node dist/index.js weekly",
     "news": "node dist/index.js news",
     "trend": "node dist/index.js trend",
-    "seo": "node dist/index.js seo",
     "scheduler": "node dist/index.js scheduler",
     "sale": "node dist/index.js sale",
     "ranking": "node dist/index.js ranking",

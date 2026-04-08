@@ -4,6 +4,8 @@ import path from 'path';
 
 const SKILLS_DIR = path.join(process.cwd(), 'skills');
 
+const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
+
 function loadSkill(name: string): string {
   return fs.readFileSync(path.join(SKILLS_DIR, `${name}.md`), 'utf-8');
 }
@@ -44,37 +46,24 @@ export async function runTrend(ctx: AgentContext): Promise<string> {
   return result;
 }
 
-// SEOデータ収集
-export async function runSeo(ctx: AgentContext): Promise<string> {
-  console.log('\n📊 SEOデータ収集中...');
-  const skill = loadSkill('seo');
-  const weekLabel = getWeekLabel();
-  const siteUrl = process.env.BLOG_SITE_URL ?? 'https://linhua-blog.com';
-  const result = await runAgent(
-    `今週（${weekLabel}週）のSEOサマリーを取得してください。サイトURL: ${siteUrl}`,
-    skill,
-    ctx
-  );
-  console.log('  ✅ SEOデータ収集完了');
-  return result;
-}
-
 // 週次まとめ（全タスク実行）
 export async function runWeekly(ctx: AgentContext): Promise<{
   news: string;
   trend: string;
-  seo: string;
   sale: string;
   ranking: string;
   yurinaviNews: string;
 }> {
   const news = await runNews(ctx);
+  await sleep(3000);
   const trend = await runTrend(ctx);
-  const seo = await runSeo(ctx);
+  await sleep(3000);
   const sale = await runSale(ctx);
+  await sleep(3000);
   const ranking = await runRanking(ctx);
+  await sleep(3000);
   const yurinaviNews = await runYurinaviNews(ctx);
-  return { news, trend, seo, sale, ranking, yurinaviNews };
+  return { news, trend, sale, ranking, yurinaviNews };
 }
 
 // セール情報収集

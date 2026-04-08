@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import path from 'path';
 import { initMcp, closeMcp, AgentContext } from './agent.js';
-import { runNews, runTrend, runSeo, runSale, runRanking, runYurinaviNews, runWeekly, runDaily } from './tasks/index.js';
+import { runNews, runTrend, runSale, runRanking, runYurinaviNews, runWeekly, runDaily } from './tasks/index.js';
 import { runChat } from './chat.js';
 import { startScheduler } from './scheduler.js';
 import { saveToCraft, saveDailyToCraft } from './craft.js';
@@ -25,7 +25,6 @@ async function main(): Promise<void> {
     console.log('  pnpm run chat       # 対話モード');
     console.log('  pnpm run news       # 今週の百合ニュース収集');
     console.log('  pnpm run trend      # SNSトレンド収集');
-    console.log('  pnpm run seo        # SEOデータ収集');
     console.log('  pnpm run sale       # セール情報収集');
     console.log('  pnpm run ranking    # 百合ランキング収集');
     console.log('  pnpm run weekly     # 全タスク実行してCraftに保存');
@@ -61,7 +60,6 @@ async function main(): Promise<void> {
         break;
 
       case 'seo':
-        console.log(await runSeo(ctx));
         break;
 
       case 'daily': {
@@ -95,7 +93,6 @@ async function main(): Promise<void> {
         } else {
           console.log('\n--- ニュース ---\n' + results.news);
           console.log('\n--- トレンド ---\n' + results.trend);
-          console.log('\n--- SEO ---\n' + results.seo);
           console.log('\n--- セール ---\n' + results.sale);
           console.log('\n--- ランキング ---\n' + results.ranking);
           console.log('\n--- 百合ナビニュース ---\n' + results.yurinaviNews);
