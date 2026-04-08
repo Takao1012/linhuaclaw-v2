@@ -19,7 +19,7 @@ PicoClaw/Siki的なスリムな設計をベースに、**Skill文書でLLMをコ
 
 ## ファイル構成
 
-\`\`\`
+```
 linhuaclaw-v2/
 ├── src/
 │   ├── index.ts        # CLIエントリーポイント
@@ -39,7 +39,7 @@ linhuaclaw-v2/
 ├── .mcp.json           # MCPサーバー設定
 ├── .env                # 環境変数
 └── package.json
-\`\`\`
+```
 
 ---
 
@@ -47,22 +47,22 @@ linhuaclaw-v2/
 
 ### 1. インストール
 
-\`\`\`bash
+```bash
 git clone https://github.com/your-username/linhuaclaw-v2.git
 cd linhuaclaw-v2
 pnpm install
 pnpm run build
-\`\`\`
+```
 
 ### 2. 環境変数設定
 
-\`\`\`bash
+```bash
 cp .env.example .env
-\`\`\`
+```
 
 `.env`を編集：
 
-\`\`\`env
+```env
 # OpenRouter APIキー
 OPENROUTER_API_KEY=sk-or-xxxxxxxxxx
 
@@ -76,13 +76,13 @@ BLOG_SITE_URL=https://your-blog.com
 # Craft設定（CraftのフォルダIDを指定）
 CRAFT_FOLDER_ID=your-weekly-folder-id
 CRAFT_DAILY_FOLDER_ID=your-daily-folder-id
-\`\`\`
+```
 
 ### 3. MCPサーバー設定
 
 `.mcp.json`を作成：
 
-\`\`\`json
+```json
 {
   "mcpServers": {
     "brave-search": {
@@ -122,14 +122,14 @@ CRAFT_DAILY_FOLDER_ID=your-daily-folder-id
     }
   }
 }
-\`\`\`
+```
 
-> **Note**: CraftはStreamable HTTPトランスポート（`url`で指定）。その他はstdio。
+> **Note**: CraftはStreamable HTTPトランスポート（`url`で指定）。その他はstdio。  
 > X MCPはPay-per-use課金のため、使用しない場合は`"disabled": true`を設定するか省略可能。
 
 ### 4. 起動スクリプト設定（任意）
 
-\`\`\`bash
+```bash
 mkdir -p ~/bin
 
 cat > ~/bin/LinhuaClaw << 'EOF'
@@ -149,7 +149,7 @@ chmod +x ~/bin/LinhuaClawScheduler
 # PATHに追加
 echo 'export PATH="$HOME/bin:$PATH"' >> ~/.bashrc
 source ~/.bashrc
-\`\`\`
+```
 
 ---
 
@@ -157,13 +157,13 @@ source ~/.bashrc
 
 ### 対話モード
 
-\`\`\`bash
+```bash
 LinhuaClaw
 # または
 pnpm run chat
-\`\`\`
+```
 
-\`\`\`
+```
 > /daily              # デイリーキャッチアップ → Craft保存
 > /news               # 今週のニュース収集
 > /trend              # SNSトレンド収集（X含む）
@@ -177,11 +177,11 @@ pnpm run chat
 > 今日のキャッチアップして
 > 今週のニュースをまとめて
 > 週次キャッチアップを実行して
-\`\`\`
+```
 
 ### コマンド直接実行
 
-\`\`\`bash
+```bash
 pnpm run daily      # デイリーキャッチアップ → Craft保存
 pnpm run news       # ニュース収集
 pnpm run trend      # トレンド収集（X含む）
@@ -189,17 +189,17 @@ pnpm run sale       # セール情報収集
 pnpm run ranking    # ランキング収集
 pnpm run weekly     # 全タスク実行 → Craft保存
 pnpm run scheduler  # スケジューラー起動
-\`\`\`
+```
 
 ### スケジューラー（自動実行）
 
-\`\`\`bash
+```bash
 LinhuaClawScheduler
 # または
 pnpm run scheduler
-\`\`\`
+```
 
-毎週土曜08:00に週次タスクを自動実行してCraftに保存する。
+毎週土曜08:00に週次タスクを自動実行してCraftに保存する。  
 実行直前にMCPを再接続するため、長時間起動していても接続切れしない。
 
 ---
@@ -226,12 +226,12 @@ pnpm run scheduler
 - **どう出力するか**（フォーマット・文字数）
 - **何をしてはいけないか**（Craftへの保存禁止など）
 
-\`\`\`markdown
+```markdown
 ## 重要な制約
 - Craftへの保存・ドキュメント作成は絶対にしない
   （保存はコード側が行うため、LLMは関与しない）
 - テキストで結果を返すだけでよい
-\`\`\`
+```
 
 LLMはSkillを読んで自律的にMCPを呼ぶ。Craftへの保存はLLMではなく`craft.ts`のコードが担当する。
 
@@ -253,11 +253,11 @@ Skillファイルを追加するだけで新しい情報源やトピックに対
 
 `.env`の`MODEL_TASK`を変更するだけで任意のOpenRouterモデルに切り替えられる：
 
-\`\`\`env
+```env
 MODEL_TASK=deepseek/deepseek-v3.2     # 高品質・コスパ優秀
 MODEL_TASK=zhipuai/glm-5              # 読みやすい出力
 MODEL_TASK=minimax/minimax-m2.7       # ツールコール安定
-\`\`\`
+```
 
 ---
 
@@ -270,8 +270,7 @@ OpenRouter経由でのコスト実績（参考値）：
 | DeepSeek V3.2 | ~$0.19/回 | ~$0.03/回 |
 | GLM-5 | ~$0.16/回 | — |
 
-X MCP: ~$0.005/件（週次trendで10件取得の場合 +$0.05/回）
-
+X MCP: ~$0.005/件（週次trendで10件取得の場合 +$0.05/回）  
 月換算でも数百円程度で運用可能。
 
 ---
