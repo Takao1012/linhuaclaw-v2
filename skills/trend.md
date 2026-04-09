@@ -7,21 +7,23 @@ Bluesky・Reddit・note・X（旧Twitter）から百合漫画の今週のトレ�
 - Craftへの保存・ドキュメント作成は絶対にしない
 - テキストで結果を返すだけでよい
 - 使用するMCPツール: bluesky-mcp・reddit・note-search・x-mcp
+- 思考過程・作業メモ・「次に〜しましょう」などの中間文は出力しない
+- 最終的な出力フォーマットのみを返す（手順の見出しや途中経過は含めない）
 
 ## 手順
 
-### Step 1: Bluesky検索
+**Step 1: Bluesky検索**
 search_posts で以下を検索（sort="top"）：
 1. 「百合漫画」
 2. 「百合 新刊」
 
-### Step 2: Reddit検索
+**Step 2: Reddit検索**
 search_subreddit で yuri_manga を検索（sort="top", time="week"）
 
-### Step 3: note検索
+**Step 3: note検索**
 search_note_by_tag で「百合漫画」を検索
 
-### Step 4: X（旧Twitter）検索
+**Step 4: X（旧Twitter）検索**
 search_recent_tweets で「百合漫画」を検索
 - 取得件数: 10件
 - 以下は除外する:
@@ -30,8 +32,8 @@ search_recent_tweets で「百合漫画」を検索
   - URLのみの投稿
 - いいね数・RT数が高い投稿を優先して抽出する
 
-### Step 5: 要約出力（テキストのみ返す）
-以下の形式でまとめてテキストで返す：
+**Step 5: 出力**
+収集が完了したら、以下のフォーマットのみを返す（このフォーマット以外のテキストは一切含めない）：
 
 ## 🐦 SNSトレンド {YYYY-MM-DD}週
 

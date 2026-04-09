@@ -54,15 +54,15 @@ export async function runWeekly(ctx: AgentContext): Promise<{
   ranking: string;
   yurinaviNews: string;
 }> {
-  const news = await runNews(ctx);
+  const news = await runNews(ctx).catch(e => `[ニュース取得失敗: ${e.message}]`);
   await sleep(3000);
-  const trend = await runTrend(ctx);
+  const trend = await runTrend(ctx).catch(e => `[トレンド取得失敗: ${e.message}]`);
   await sleep(3000);
-  const sale = await runSale(ctx);
+  const sale = await runSale(ctx).catch(e => `[セール情報取得失敗: ${e.message}]`);
   await sleep(3000);
-  const ranking = await runRanking(ctx);
+  const ranking = await runRanking(ctx).catch(e => `[ランキング取得失敗: ${e.message}]`);
   await sleep(3000);
-  const yurinaviNews = await runYurinaviNews(ctx);
+  const yurinaviNews = await runYurinaviNews(ctx).catch(e => `[百合ナビニュース取得失敗: ${e.message}]`);
   return { news, trend, sale, ranking, yurinaviNews };
 }
 

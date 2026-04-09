@@ -209,7 +209,7 @@ export async function runAgent(
         result = `エラー: ${(e as Error).message}`;
         console.log(`  ⚠️  ${result}`);
       }
-      messages.push({ role: 'user', content: `Tool result:\n${result.slice(0, 4000)}` });
+      messages.push({ role: 'user', content: `Tool result:\n${result.slice(0, 8000)}` });
     }
   }
 
