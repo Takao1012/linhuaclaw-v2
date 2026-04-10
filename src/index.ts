@@ -15,15 +15,15 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
-  // 任意の環境変数の設定漏れを警告（起動時に気づけるように）
+  const command = process.argv[2];
+
+  // 設定漏れを起動時に警告
   if (!process.env.CRAFT_FOLDER_ID) {
     console.warn('⚠️  CRAFT_FOLDER_ID が未設定です。週次保存先がunsortedになります。');
   }
   if (!process.env.CRAFT_DAILY_FOLDER_ID) {
     console.warn('⚠️  CRAFT_DAILY_FOLDER_ID が未設定です。デイリー保存先がunsortedになります。');
   }
-
-  const command = process.argv[2];
 
   console.log('🦞 LinhuaClaw v2 - 百合ブログ運営キャッチアップエージェント');
   console.log(`   コマンド: ${command ?? '(なし)'}\n`);
@@ -45,7 +45,7 @@ async function main(): Promise<void> {
 
   const ctx: AgentContext = {
     apiKey,
-    model: process.env.MODEL_TASK ?? 'deepseek/deepseek-v3.2',
+    model: process.env.MODEL_TASK ?? 'minimax/minimax-m2.7',
     mcpClients: clients,
     mcpTools: tools,
   };
@@ -67,6 +67,8 @@ async function main(): Promise<void> {
         console.log(await runTrend(ctx));
         break;
 
+      case 'seo':
+        break;
 
       case 'daily': {
         const result = await runDaily(ctx);
@@ -100,7 +102,6 @@ async function main(): Promise<void> {
           console.log('\n--- ニュース ---\n' + results.news);
           console.log('\n--- トレンド ---\n' + results.trend);
           console.log('\n--- セール ---\n' + results.sale);
-          console.log('\n--- ランキング ---\n' + results.ranking);
           console.log('\n--- 百合ナビニュース ---\n' + results.yurinaviNews);
         }
         break;

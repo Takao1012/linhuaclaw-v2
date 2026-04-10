@@ -37,7 +37,6 @@ export function startScheduler(ctx: AgentContext): void {
         console.log(results.news);
         console.log(results.trend);
         console.log(results.sale);
-        console.log(results.ranking);
         console.log(results.yurinaviNews);
       }
     } catch (e) {

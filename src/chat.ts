@@ -10,6 +10,7 @@ const COMMAND_PROMPT = `あなたはLinhuaClaw v2のコマンド判断AIです�
 - daily: 今日のBluesky・Reddit・百合ナビをキャッチアップ
 - news: 今週の百合漫画ニュースを収集
 - trend: SNSトレンドを収集
+- seo: SEOデータを確認
 - sale: 現在開催中のセール情報を収集
 - yurinavi: 百合ナビのニュース一覧を収集
 - ranking: pixivコミック・ComicWalker百合ランキングを収集
@@ -188,7 +189,6 @@ async function executeCommand(
         console.log('\n--- ニュース ---\n' + results.news);
         console.log('\n--- トレンド ---\n' + results.trend);
         console.log('\n--- セール ---\n' + results.sale);
-        console.log('\n--- ランキング ---\n' + results.ranking);
         console.log('\n--- 百合ナビニュース ---\n' + results.yurinaviNews);
       }
       break;

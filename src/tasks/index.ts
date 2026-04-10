@@ -46,24 +46,35 @@ export async function runTrend(ctx: AgentContext): Promise<string> {
   return result;
 }
 
-// 週次まとめ（全タスク実行）
+// タスクを安全に実行（失敗してもスキップして続行）
+async function safeRun(
+  name: string,
+  fn: () => Promise<string>
+): Promise<string> {
+  try {
+    return await fn();
+  } catch (e) {
+    const msg = `⚠️ ${name}の収集に失敗しました: ${(e as Error).message}`;
+    console.error(`  ❌ ${msg}`);
+    return msg;
+  }
+}
+
+// 週次まとめ（全タスク実行・途中でコケても続行）
 export async function runWeekly(ctx: AgentContext): Promise<{
   news: string;
   trend: string;
   sale: string;
-  ranking: string;
   yurinaviNews: string;
 }> {
-  const news = await runNews(ctx).catch(e => `[ニュース取得失敗: ${e.message}]`);
+  const news = await safeRun('ニュース', () => runNews(ctx));
   await sleep(3000);
-  const trend = await runTrend(ctx).catch(e => `[トレンド取得失敗: ${e.message}]`);
+  const trend = await safeRun('トレンド', () => runTrend(ctx));
   await sleep(3000);
-  const sale = await runSale(ctx).catch(e => `[セール情報取得失敗: ${e.message}]`);
+  const sale = await safeRun('セール情報', () => runSale(ctx));
   await sleep(3000);
-  const ranking = await runRanking(ctx).catch(e => `[ランキング取得失敗: ${e.message}]`);
-  await sleep(3000);
-  const yurinaviNews = await runYurinaviNews(ctx).catch(e => `[百合ナビニュース取得失敗: ${e.message}]`);
-  return { news, trend, sale, ranking, yurinaviNews };
+  const yurinaviNews = await safeRun('百合ナビニュース', () => runYurinaviNews(ctx));
+  return { news, trend, sale, yurinaviNews };
 }
 
 // セール情報収集

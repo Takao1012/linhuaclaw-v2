@@ -154,7 +154,7 @@ async function callLlm(
       'X-Title': 'LinhuaClaw v2',
     },
     body: JSON.stringify(body),
-    signal: AbortSignal.timeout(120_000),
+    signal: AbortSignal.timeout(180_000),
   });
 
   if (!res.ok) throw new Error(`OpenRouter API error: ${res.status} ${await res.text()}`);
