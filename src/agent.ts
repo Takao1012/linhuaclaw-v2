@@ -172,6 +172,19 @@ async function callLlm(
   };
 }
 
+// ─── 中間思考フィルタリング ──────────────────────
+
+function filterThinking(text: string): string {
+  return text
+    // 「---\n次に〜」のような作業ログブロックを削除
+    .replace(/\n*---+\n+(?:次に|では|続いて|それでは|まず)[^\n]*\n*/g, '\n')
+    // 「次に〜しましょう」「〜を取得します」単独行を削除
+    .replace(/^(?:次に|では次に|続いて|それでは|まず)[^\n]*\n/gm, '')
+    // 先頭・末尾の余分な改行を整理
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+}
+
 // ─── エージェントループ ───────────────────────────
 
 export async function runAgent(
@@ -194,7 +207,7 @@ export async function runAgent(
     );
 
     if (toolCalls.length === 0) {
-      return content ?? '（応答なし）';
+      return filterThinking(content ?? '（応答なし）');
     }
 
     messages.push({ role: 'assistant', content: content ?? '' });
