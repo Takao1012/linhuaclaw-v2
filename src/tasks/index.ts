@@ -23,10 +23,11 @@ export async function runNews(ctx: AgentContext): Promise<string> {
   console.log('\n📰 百合漫画ニュース収集中...');
   const skill = loadSkill('news');
   const weekLabel = getWeekLabel();
+  const taskCtx = { ...ctx, model: process.env.MODEL_WEEKLY ?? ctx.model };
   const result = await runAgent(
     `今週（${weekLabel}週）の百合漫画ニュースを収集して要約してください。`,
     skill,
-    ctx
+    taskCtx
   );
   console.log('  ✅ ニュース収集完了');
   return result;
@@ -37,10 +38,11 @@ export async function runTrend(ctx: AgentContext): Promise<string> {
   console.log('\n🐦 SNSトレンド収集中...');
   const skill = loadSkill('trend');
   const weekLabel = getWeekLabel();
+  const taskCtx = { ...ctx, model: process.env.MODEL_WEEKLY ?? ctx.model };
   const result = await runAgent(
     `今週（${weekLabel}週）の百合漫画SNSトレンドを収集して要約してください。`,
     skill,
-    ctx
+    taskCtx
   );
   console.log('  ✅ トレンド収集完了');
   return result;
@@ -82,10 +84,11 @@ export async function runSale(ctx: AgentContext): Promise<string> {
   console.log('\n💰 セール情報収集中...');
   const skill = loadSkill('sale');
   const today = new Date().toISOString().split('T')[0];
+  const taskCtx = { ...ctx, model: process.env.MODEL_WEEKLY ?? ctx.model };
   const result = await runAgent(
     `現在（${today}時点）の百合漫画セール情報を収集して要約してください。`,
     skill,
-    ctx
+    taskCtx
   );
   console.log('  ✅ セール情報収集完了');
   return result;
@@ -96,10 +99,11 @@ export async function runRanking(ctx: AgentContext): Promise<string> {
   console.log('\n📊 ランキング収集中...');
   const skill = loadSkill('ranking');
   const today = new Date().toISOString().split('T')[0];
+  const taskCtx = { ...ctx, model: process.env.MODEL_RANKING ?? ctx.model };
   const result = await runAgent(
     `現在（${today}時点）のpixivコミックとComicWalkerの百合ランキングを収集して要約してください。`,
     skill,
-    ctx
+    taskCtx
   );
   console.log('  ✅ ランキング収集完了');
   return result;
@@ -110,10 +114,11 @@ export async function runYurinaviNews(ctx: AgentContext): Promise<string> {
   console.log('\n🔔 百合ナビニュース収集中...');
   const skill = loadSkill('yurinavi-news');
   const weekLabel = getWeekLabel();
+  const taskCtx = { ...ctx, model: process.env.MODEL_WEEKLY ?? ctx.model };
   const result = await runAgent(
     `今週（${weekLabel}週）の百合ナビニュース一覧を収集して要約してください。`,
     skill,
-    ctx
+    taskCtx
   );
   console.log('  ✅ 百合ナビニュース収集完了');
   return result;
@@ -124,11 +129,27 @@ export async function runDaily(ctx: AgentContext): Promise<string> {
   console.log('\n🌙 デイリーキャッチアップ収集中...');
   const skill = loadSkill('daily');
   const today = new Date().toISOString().split('T')[0];
+  const taskCtx = { ...ctx, model: process.env.MODEL_DAILY ?? ctx.model };
   const result = await runAgent(
     `今日（${today}）の百合漫画デイリーキャッチアップを収集して要約してください。`,
     skill,
-    ctx
+    taskCtx
   );
   console.log('  ✅ デイリーキャッチアップ完了');
+  return result;
+}
+
+// 新刊リスト取得
+export async function runShinkan(ctx: AgentContext): Promise<string> {
+  console.log('\n📚 新刊リスト取得中...');
+  const skill = loadSkill('shinkan');
+  const today = new Date().toISOString().split('T')[0];
+  const taskCtx = { ...ctx, model: process.env.MODEL_SHINKAN ?? process.env.MODEL_WEEKLY ?? ctx.model };
+  const result = await runAgent(
+    `現在（${today}時点）の百合漫画新刊リストを取得して整形してください。`,
+    skill,
+    taskCtx
+  );
+  console.log('  ✅ 新刊リスト取得完了');
   return result;
 }

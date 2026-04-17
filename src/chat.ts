@@ -1,12 +1,13 @@
 import * as readline from 'readline';
 import { AgentContext, runAgent } from './agent.js';
-import { runNews, runTrend, runSale, runRanking, runYurinaviNews, runWeekly, runDaily } from './tasks/index.js';
-import { saveToCraft, saveDailyToCraft } from './craft.js';
+import { runNews, runTrend, runSale, runRanking, runYurinaviNews, runWeekly, runDaily, runShinkan } from './tasks/index.js';
+import { saveToCraft, saveDailyToCraft, saveShinkanToCraft } from './craft.js';
 
 const COMMAND_PROMPT = `あなたはLinhuaClaw v2のコマンド判断AIです。
 ユーザーの入力から実行すべきコマンドをJSON形式で返してください。
 
 利用可能なコマンド:
+- shinkan: 今週・来週・再来週の新刊リストを取得してCraftに保存
 - daily: 今日のBluesky・Reddit・百合ナビをキャッチアップ
 - news: 今週の百合漫画ニュースを収集
 - trend: SNSトレンドを収集
@@ -155,6 +156,16 @@ async function executeCommand(
   message?: string
 ): Promise<void> {
   switch (command) {
+    case 'shinkan': {
+      const result = await runShinkan(ctx);
+      if (craftClient) {
+        const dateLabel = new Date().toISOString().split('T')[0];
+        await saveShinkanToCraft(craftClient, dateLabel, result);
+      } else {
+        console.log(result);
+      }
+      break;
+    }
     case 'daily': {
       const result = await runDaily(ctx);
       if (craftClient) {

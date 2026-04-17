@@ -97,3 +97,43 @@ export async function saveDailyToCraft(
 
   console.log(`  ✅ Craftに保存完了: ${title}`);
 }
+
+// 新刊リストをCraftに保存する
+export async function saveShinkanToCraft(
+  craftClient: Client,
+  dateLabel: string,
+  content: string
+): Promise<void> {
+  console.log('\n📝 Craftに新刊リストを保存中...');
+
+  const title = `新刊リスト ${dateLabel}`;
+  const folderId = process.env.CRAFT_SHINKAN_FOLDER_ID;
+
+  const createResult = await craftClient.callTool({
+    name: 'documents_create',
+    arguments: {
+      documents: [{ title }],
+      ...(folderId ? { destination: { folderId } } : { destination: { destination: 'unsorted' } }),
+    },
+  });
+
+  const resultContent = createResult.content as Array<{ type: string; text?: string }>;
+  const resultText = resultContent.filter(c => c.type === 'text').map(c => c.text ?? '').join('');
+
+  const docId = extractDocId(resultText);
+  if (!docId) {
+    console.log('  ⚠️  ドキュメントID取得失敗');
+    return;
+  }
+
+  await craftClient.callTool({
+    name: 'markdown_add',
+    arguments: {
+      pageId: docId,
+      position: 'end',
+      markdown: content,
+    },
+  });
+
+  console.log(`  ✅ Craftに保存完了: ${title}`);
+}

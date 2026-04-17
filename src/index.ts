@@ -1,10 +1,10 @@
 import 'dotenv/config';
 import path from 'path';
 import { initMcp, closeMcp, AgentContext } from './agent.js';
-import { runNews, runTrend, runSale, runRanking, runYurinaviNews, runWeekly, runDaily } from './tasks/index.js';
+import { runNews, runTrend, runSale, runRanking, runYurinaviNews, runWeekly, runDaily, runShinkan } from './tasks/index.js';
 import { runChat } from './chat.js';
 import { startScheduler } from './scheduler.js';
-import { saveToCraft, saveDailyToCraft } from './craft.js';
+import { saveToCraft, saveDailyToCraft, saveShinkanToCraft } from './craft.js';
 
 const MCP_CONFIG = path.join(process.cwd(), '.mcp.json');
 
@@ -69,6 +69,17 @@ async function main(): Promise<void> {
 
       case 'seo':
         break;
+
+      case 'shinkan': {
+        const result = await runShinkan(ctx);
+        if (craftClient) {
+          const dateLabel = new Date().toISOString().split('T')[0];
+          await saveShinkanToCraft(craftClient, dateLabel, result);
+        } else {
+          console.log(result);
+        }
+        break;
+      }
 
       case 'daily': {
         const result = await runDaily(ctx);
