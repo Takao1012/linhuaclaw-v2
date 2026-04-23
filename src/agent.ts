@@ -145,7 +145,8 @@ async function callLlm(
     body.tool_choice = 'auto';
   }
 
-  const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+  const baseUrl = process.env.OPENROUTER_BASE_URL ?? 'https://openrouter.ai/api/v1';
+  const res = await fetch(`${baseUrl}/chat/completions`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${apiKey}`,
@@ -210,7 +211,7 @@ export async function runAgent(
       return filterThinking(content ?? '（応答なし）');
     }
 
-    messages.push({ role: 'assistant', content: content ?? '' });
+    messages.push({ role: 'assistant', content: content || 'Calling tools...' });
 
     for (const tc of toolCalls) {
       const args = JSON.parse(tc.function.arguments) as Record<string, unknown>;
