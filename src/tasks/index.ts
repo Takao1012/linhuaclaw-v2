@@ -1,4 +1,5 @@
 import { AgentContext, runAgent } from '../agent.js';
+import fetch from 'node-fetch';
 import fs from 'fs';
 import path from 'path';
 
@@ -145,11 +146,40 @@ export async function runShinkan(ctx: AgentContext): Promise<string> {
   const skill = loadSkill('shinkan');
   const today = new Date().toISOString().split('T')[0];
   const taskCtx = { ...ctx, model: process.env.MODEL_SHINKAN ?? process.env.MODEL_WEEKLY ?? ctx.model };
-  const result = await runAgent(
-    `現在（${today}時点）の百合漫画新刊リストを取得して整形してください。`,
-    skill,
-    taskCtx
-  );
+
+  // カレンダーページを事前fetchしてプロンプトに埋め込む
+  console.log('  📡 百合ナビカレンダーを取得中...');
+  let calendarMarkdown = '';
+  try {
+    const apiKey = process.env.FIRECRAWL_API_KEY;
+    if (!apiKey) throw new Error('FIRECRAWL_API_KEY が未設定');
+    const res = await fetch('https://api.firecrawl.dev/v1/scrape', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ url: 'https://yurinavi.com/yuri-calendar/', formats: ['markdown'] }),
+      signal: AbortSignal.timeout(60_000),
+    });
+    if (!res.ok) throw new Error(`Firecrawl API error: ${res.status}`);
+    const data = await res.json() as { data?: { markdown?: string } };
+    calendarMarkdown = data.data?.markdown ?? '';
+    console.log(`  ✅ カレンダー取得完了 (${calendarMarkdown.length}文字)`);
+  } catch (e) {
+    console.log(`  ⚠️  カレンダー取得失敗: ${(e as Error).message}`);
+  }
+
+  const prompt = calendarMarkdown
+    ? `以下は百合ナビのカレンダーページの内容です。現在（${today}時点）の今週・来週・再来週の新刊リストを抽出して整形してください。\n\n---\n${calendarMarkdown}\n---`
+    : `現在（${today}時点）の百合漫画新刊リストを取得して整形してください。`;
+
+  // firecrawl_scrapeのみに絞ったctxを渡す
+  const shinkanCtx = {
+    ...taskCtx,
+    mcpTools: taskCtx.mcpTools.filter((t: any) => t.name === 'firecrawl_scrape'),
+  };
+  const result = await runAgent(prompt, skill, shinkanCtx);
   console.log('  ✅ 新刊リスト取得完了');
   return result;
 }
