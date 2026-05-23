@@ -2,6 +2,7 @@ import fetch from 'node-fetch';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
 import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
+import { SSEClientTransport } from '@modelcontextprotocol/sdk/client/sse.js';
 import fs from 'fs';
 import path from 'path';
 
@@ -65,13 +66,17 @@ export async function initMcp(mcpConfigPath: string): Promise<{
     if (serverConfig.disabled) continue;
     try {
       // SSE/HTTP型（urlが設定されている場合）
-      const transport = serverConfig.url
-        ? new StreamableHTTPClientTransport(new URL(serverConfig.url))
-        : new StdioClientTransport({
-            command: serverConfig.command!,
-            args: serverConfig.args ?? [],
-            env: { ...process.env as Record<string, string>, ...(serverConfig.env ?? {}) },
-          });
+      let transport;
+      if (serverConfig.url) {
+        // StreamableHTTP形式を優先、失敗したらSSEにフォールバック
+        transport = new StreamableHTTPClientTransport(new URL(serverConfig.url));
+      } else {
+        transport = new StdioClientTransport({
+          command: serverConfig.command!,
+          args: serverConfig.args ?? [],
+          env: { ...process.env as Record<string, string>, ...(serverConfig.env ?? {}) },
+        });
+      }
       const client = new Client({ name: 'linhua-claw-v2', version: '2.0.0' }, { capabilities: {} });
       await client.connect(transport);
       const { tools: serverTools } = await client.listTools();

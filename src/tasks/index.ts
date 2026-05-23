@@ -125,6 +125,21 @@ export async function runYurinaviNews(ctx: AgentContext): Promise<string> {
   return result;
 }
 
+// KUキャッチアップ
+export async function runKuCatchup(ctx: AgentContext): Promise<string> {
+  console.log('\n📚 KUキャッチアップ収集中...');
+  const skill = loadSkill('ku-catchup');
+  const today = new Date().toISOString().split('T')[0];
+  const taskCtx = { ...ctx, model: process.env.MODEL_KU ?? process.env.MODEL_TASK ?? ctx.model };
+  const result = await runAgent(
+    `今日（${today}）のKUキャッチアップを実行してください。クエリ: 百合漫画, 百合マンガ, 百合, 百合 コミック`,
+    skill,
+    taskCtx
+  );
+  console.log('  ✅ KUキャッチアップ完了');
+  return result;
+}
+
 // デイリーキャッチアップ
 export async function runDaily(ctx: AgentContext): Promise<string> {
   console.log('\n🌙 デイリーキャッチアップ収集中...');

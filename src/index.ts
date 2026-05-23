@@ -1,10 +1,10 @@
 import 'dotenv/config';
 import path from 'path';
 import { initMcp, closeMcp, AgentContext } from './agent.js';
-import { runNews, runTrend, runSale, runRanking, runYurinaviNews, runWeekly, runDaily, runShinkan } from './tasks/index.js';
+import { runNews, runTrend, runSale, runRanking, runYurinaviNews, runWeekly, runDaily, runShinkan, runKuCatchup } from './tasks/index.js';
 import { runChat } from './chat.js';
 import { startScheduler } from './scheduler.js';
-import { saveToCraft, saveDailyToCraft, saveShinkanToCraft } from './craft.js';
+import { saveToCraft, saveDailyToCraft, saveShinkanToCraft, saveKuToCraft } from './craft.js';
 
 const MCP_CONFIG = path.join(process.cwd(), '.mcp.json');
 
@@ -36,6 +36,7 @@ async function main(): Promise<void> {
     console.log('  pnpm run sale       # セール情報収集');
     console.log('  pnpm run ranking    # 百合ランキング収集');
     console.log('  pnpm run weekly     # 全タスク実行してCraftに保存');
+    console.log('  pnpm run ku         # KU対象百合漫画キャッチアップ');
     console.log('  pnpm run scheduler  # スケジューラー起動（毎週土曜08:00）');
     process.exit(0);
   }
@@ -69,6 +70,17 @@ async function main(): Promise<void> {
 
       case 'seo':
         break;
+
+      case 'ku': {
+        const result = await runKuCatchup(ctx);
+        if (craftClient) {
+          const dateLabel = new Date().toISOString().split('T')[0];
+          await saveKuToCraft(craftClient, dateLabel, result);
+        } else {
+          console.log(result);
+        }
+        break;
+      }
 
       case 'shinkan': {
         const result = await runShinkan(ctx);

@@ -1,7 +1,7 @@
 import * as readline from 'readline';
 import { AgentContext, runAgent } from './agent.js';
-import { runNews, runTrend, runSale, runRanking, runYurinaviNews, runWeekly, runDaily, runShinkan } from './tasks/index.js';
-import { saveToCraft, saveDailyToCraft, saveShinkanToCraft } from './craft.js';
+import { runNews, runTrend, runSale, runRanking, runYurinaviNews, runWeekly, runDaily, runShinkan, runKuCatchup } from './tasks/index.js';
+import { saveToCraft, saveDailyToCraft, saveShinkanToCraft, saveKuToCraft } from './craft.js';
 
 const COMMAND_PROMPT = `あなたはLinhuaClaw v2のコマンド判断AIです。
 ユーザーの入力から実行すべきコマンドをJSON形式で返してください。
@@ -15,7 +15,7 @@ const COMMAND_PROMPT = `あなたはLinhuaClaw v2のコマンド判断AIです�
 - sale: 現在開催中のセール情報を収集
 - yurinavi: 百合ナビのニュース一覧を収集
 - ranking: pixivコミック・ComicWalker百合ランキングを収集
-- weekly: 全タスクをまとめて実行してCraftに保存
+- ku: KU（Kindle Unlimited）対象の百合漫画タイトルを取得してCraftに保存
 - help: 使い方を表示
 - exit: 終了
 
@@ -28,6 +28,10 @@ JSONのみ返してください:
 function printHelp(): void {
   console.log(`
 📋 使い方
+
+  KUキャッチアップ:
+    「KU対象の百合漫画を調べて」
+    「kindle unlimitedの百合漫画を取得して」
 
   デイリーキャッチアップ:
     「今日のキャッチアップして」
@@ -156,6 +160,16 @@ async function executeCommand(
   message?: string
 ): Promise<void> {
   switch (command) {
+    case 'ku': {
+      const result = await runKuCatchup(ctx);
+      if (craftClient) {
+        const dateLabel = new Date().toISOString().split('T')[0];
+        await saveKuToCraft(craftClient, dateLabel, result);
+      } else {
+        console.log(result);
+      }
+      break;
+    }
     case 'shinkan': {
       const result = await runShinkan(ctx);
       if (craftClient) {

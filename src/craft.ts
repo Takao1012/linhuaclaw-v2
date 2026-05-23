@@ -98,6 +98,46 @@ export async function saveDailyToCraft(
   console.log(`  ✅ Craftに保存完了: ${title}`);
 }
 
+// KUキャッチアップをCraftに保存する
+export async function saveKuToCraft(
+  craftClient: Client,
+  dateLabel: string,
+  content: string
+): Promise<void> {
+  console.log('\n📝 CraftにKUキャッチアップを保存中...');
+
+  const title = `KU百合漫画キャッチアップ ${dateLabel}`;
+  const folderId = '43c7da1c-3733-9e84-67a2-dcaeac1b307e';
+
+  const createResult = await craftClient.callTool({
+    name: 'documents_create',
+    arguments: {
+      documents: [{ title }],
+      destination: { folderId },
+    },
+  });
+
+  const resultContent = createResult.content as Array<{ type: string; text?: string }>;
+  const resultText = resultContent.filter(c => c.type === 'text').map(c => c.text ?? '').join('');
+
+  const docId = extractDocId(resultText);
+  if (!docId) {
+    console.log('  ⚠️  ドキュメントID取得失敗');
+    return;
+  }
+
+  await craftClient.callTool({
+    name: 'markdown_add',
+    arguments: {
+      pageId: docId,
+      position: 'end',
+      markdown: content,
+    },
+  });
+
+  console.log(`  ✅ Craftに保存完了: ${title}`);
+}
+
 // 新刊リストをCraftに保存する
 export async function saveShinkanToCraft(
   craftClient: Client,

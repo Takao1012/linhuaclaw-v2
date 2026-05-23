@@ -14,7 +14,8 @@
     "ranking": "node dist/index.js ranking",
     "yurinavi": "node dist/index.js yurinavi",
     "daily": "node dist/index.js daily",
-    "shinkan": "node dist/index.js shinkan"
+    "shinkan": "node dist/index.js shinkan",
+    "ku": "node dist/index.js ku"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
