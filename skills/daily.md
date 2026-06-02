@@ -17,10 +17,13 @@ Bluesky・Reddit・百合ナビから今日の百合漫画関連情報を収集�
 ## 手順
 
 ### Step 1: Bluesky 直近24時間
-search_posts で以下を検索（sort="latest"）：
+search_posts で以下の3クエリをそれぞれ検索（sort="latest"）：
 - 「百合漫画」
+- 「百合マンガ」
+- 「yuri manga」
 
-エンゲージメント（いいね・リポスト）が高い投稿を優先して3〜5件抽出する。
+各クエリでエンゲージメント（いいね・リポスト）が高い投稿を優先して5件抽出する。
+重複する投稿は除外する。
 
 ### Step 2: Reddit 当日投稿
 search_subreddit で yuri_manga を検索（sort="new", time="day"）
@@ -39,7 +42,15 @@ firecrawl_scrape で以下を取得する：
 
 ## 🌙 デイリーキャッチアップ {YYYY-MM-DD}
 
-### Bluesky
+### Bluesky「百合漫画」
+- 内容（いいねN）
+- 内容（いいねN）
+
+### Bluesky「百合マンガ」
+- 内容（いいねN）
+- 内容（いいねN）
+
+### Bluesky「yuri manga」
 - 内容（いいねN）
 - 内容（いいねN）
 
@@ -51,4 +62,3 @@ firecrawl_scrape で以下を取得する：
 - [記事タイトル](URL) - MM/DD
 
 本日の新着がない場合は「本日の新着なし」と記載してスキップする。
-全体で10件以内に収める。
