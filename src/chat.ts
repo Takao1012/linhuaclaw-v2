@@ -33,6 +33,10 @@ function printHelp(): void {
     「KU対象の百合漫画を調べて」
     「kindle unlimitedの百合漫画を取得して」
 
+  新刊リスト:
+    「今週・来週の新刊を教えて」
+    「新刊リストを取得して」
+
   デイリーキャッチアップ:
     「今日のキャッチアップして」
     「今日の百合情報を教えて」
@@ -45,7 +49,7 @@ function printHelp(): void {
     「Blueskyの百合トレンドを教えて」
     「今週の百合SNSの動向は？」
 
-  セール情報:
+  百合ナビニュース:
     「百合ナビのニュースを教えて」
     「百合ナビの最新情報を見せて」
 
@@ -60,6 +64,7 @@ function printHelp(): void {
   全部まとめて（Craftに保存）:
     「今週分全部まとめてCraftに保存して」
     「週次キャッチアップを実行して」
+    ※ weeklyはnews・trend・sale・yurinaviNewsを実行します
 
   終了: exit / bye / 終了
   `);
@@ -71,7 +76,8 @@ async function interpretCommand(
 ): Promise<{ command: string; message: string }> {
   try {
     // LLMはコマンド判断のみ（MCPツールなし・軽量モデル）
-    const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    const baseUrl = process.env.OPENROUTER_BASE_URL ?? 'https://openrouter.ai/api/v1';
+    const res = await fetch(`${baseUrl}/chat/completions`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${ctx.apiKey}`,

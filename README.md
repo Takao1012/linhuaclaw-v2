@@ -35,7 +35,9 @@ linhuaclaw-v2/
 │   ├── trend.md        # SNSトレンド収集（X含む）
 │   ├── sale.md         # セール情報収集
 │   ├── ranking.md      # ランキング収集
-│   └── yurinavi-news.md # カスタムニュース収集の例
+│   ├── shinkan.md      # 新刊リスト取得
+│   ├── ku-catchup.md   # Kindle Unlimited対象漫画取得
+│   └── yurinavi-news.md # 百合ナビニュース収集
 ├── .mcp.json           # MCPサーバー設定
 ├── .env                # 環境変数
 └── package.json
@@ -169,7 +171,10 @@ pnpm run chat
 > /trend              # SNSトレンド収集（X含む）
 > /sale               # セール情報収集
 > /ranking            # ランキング収集
-> /weekly             # 全タスク実行 → Craft保存
+> /shinkan            # 新刊リスト取得 → Craft保存
+> /ku                 # Kindle Unlimited対象漫画取得 → Craft保存
+> /yurinavi           # 百合ナビニュース収集
+> /weekly             # news・trend・sale・yurinaviNewsを実行 → Craft保存
 > help                # 使い方を表示
 > exit                # 終了
 
@@ -187,7 +192,10 @@ pnpm run news       # ニュース収集
 pnpm run trend      # トレンド収集（X含む）
 pnpm run sale       # セール情報収集
 pnpm run ranking    # ランキング収集
-pnpm run weekly     # 全タスク実行 → Craft保存
+pnpm run shinkan    # 新刊リスト取得 → Craft保存
+pnpm run ku         # Kindle Unlimited対象漫画取得 → Craft保存
+pnpm run yurinavi   # 百合ナビニュース収集
+pnpm run weekly     # news・trend・sale・yurinaviNewsを実行 → Craft保存
 pnpm run scheduler  # スケジューラー起動
 ```
 
@@ -213,7 +221,9 @@ pnpm run scheduler
 | trend | 週次 | SNSトレンド収集 | bluesky・reddit・note・x-mcp |
 | sale | 週次 | セール情報収集 | firecrawl |
 | ranking | 週次 | ランキング収集 | firecrawl |
-| weekly | 週次（自動） | 上記タスクをまとめて実行 | — |
+| shinkan | 随時（手動） | 今週・来週・再来週の新刊リスト取得 | firecrawl |
+| ku | 随時（手動） | Kindle Unlimited対象百合漫画取得 | tavily |
+| weekly | 週次（自動） | news・trend・sale・yurinaviNewsをまとめて実行 | — |
 
 ---
 
