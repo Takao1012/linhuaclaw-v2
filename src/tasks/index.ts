@@ -155,6 +155,21 @@ export async function runDaily(ctx: AgentContext): Promise<string> {
   return result;
 }
 
+// イベント・展示・コラボ情報収集
+export async function runEventWatch(ctx: AgentContext): Promise<string> {
+  console.log('\n🎪 百合イベント情報収集中...');
+  const skill = loadSkill('yuri-event-watch');
+  const today = new Date().toISOString().split('T')[0];
+  const taskCtx = { ...ctx, model: process.env.MODEL_WEEKLY ?? ctx.model };
+  const result = await runAgent(
+    `現在（${today}時点）の百合漫画関連イベント・展示・カフェコラボ・原画展情報を収集してください。`,
+    skill,
+    taskCtx
+  );
+  console.log('  ✅ イベント情報収集完了');
+  return result;
+}
+
 // 新刊リスト取得
 export async function runShinkan(ctx: AgentContext): Promise<string> {
   console.log('\n📚 新刊リスト取得中...');

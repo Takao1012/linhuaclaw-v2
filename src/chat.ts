@@ -1,6 +1,6 @@
 import * as readline from 'readline';
 import { AgentContext, runAgent } from './agent.js';
-import { runNews, runTrend, runSale, runRanking, runYurinaviNews, runWeekly, runDaily, runShinkan, runKuCatchup } from './tasks/index.js';
+import { runNews, runTrend, runSale, runRanking, runYurinaviNews, runWeekly, runDaily, runShinkan, runKuCatchup, runEventWatch } from './tasks/index.js';
 import { saveToCraft, saveDailyToCraft, saveShinkanToCraft, saveKuToCraft } from './craft.js';
 
 const COMMAND_PROMPT = `あなたはLinhuaClaw v2のコマンド判断AIです。
@@ -16,6 +16,7 @@ const COMMAND_PROMPT = `あなたはLinhuaClaw v2のコマンド判断AIです�
 - yurinavi: 百合ナビのニュース一覧を収集
 - ranking: pixivコミック・ComicWalker百合ランキングを収集
 - ku: KU（Kindle Unlimited）対象の百合漫画タイトルを取得してCraftに保存
+- event-watch: 百合漫画関連のイベント・展示・カフェコラボ・原画展情報を収集
 - help: 使い方を表示
 - exit: 終了
 
@@ -28,6 +29,10 @@ JSONのみ返してください:
 function printHelp(): void {
   console.log(`
 📋 使い方
+
+  イベント・展示・コラボ情報:
+    「百合のイベント情報を調べて」
+    「カフェコラボや原画展を探して」
 
   KUキャッチアップ:
     「KU対象の百合漫画を調べて」
@@ -134,7 +139,7 @@ export async function runChat(
     }
 
     // pnpm run xxx または /xxx の直接コマンド
-    const directCommand = input.match(/^(?:pnpm run |\/)(\w+)/)?.[1];
+    const directCommand = input.match(/^(?:pnpm run \/|\/)([\w-]+)/)?.[1];
     if (directCommand) {
       const { command, message } = { command: directCommand, message: `${directCommand}を実行します` };
       console.log(`  ⚡ ${message}`);
@@ -166,6 +171,9 @@ async function executeCommand(
   message?: string
 ): Promise<void> {
   switch (command) {
+    case 'event-watch':
+      console.log(await runEventWatch(ctx));
+      break;
     case 'ku': {
       const result = await runKuCatchup(ctx);
       if (craftClient) {
