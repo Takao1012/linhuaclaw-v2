@@ -181,20 +181,12 @@ export async function runShinkan(ctx: AgentContext): Promise<string> {
   console.log('  📡 百合ナビカレンダーを取得中...');
   let calendarMarkdown = '';
   try {
-    const apiKey = process.env.FIRECRAWL_API_KEY;
-    if (!apiKey) throw new Error('FIRECRAWL_API_KEY が未設定');
-    const res = await fetch('https://api.firecrawl.dev/v1/scrape', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ url: 'https://yurinavi.com/yuri-calendar/', formats: ['markdown'] }),
-      signal: AbortSignal.timeout(60_000),
+    const res = await fetch('https://yurinavi.com/yuri-calendar/', {
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; LinhuaClaw/1.0)' },
+      signal: AbortSignal.timeout(30_000),
     });
-    if (!res.ok) throw new Error(`Firecrawl API error: ${res.status}`);
-    const data = await res.json() as { data?: { markdown?: string } };
-    calendarMarkdown = data.data?.markdown ?? '';
+    if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
+    calendarMarkdown = await res.text();
     console.log(`  ✅ カレンダー取得完了 (${calendarMarkdown.length}文字)`);
   } catch (e) {
     console.log(`  ⚠️  カレンダー取得失敗: ${(e as Error).message}`);
@@ -204,10 +196,10 @@ export async function runShinkan(ctx: AgentContext): Promise<string> {
     ? `以下は百合ナビのカレンダーページの内容です。現在（${today}時点）の今週・来週・再来週の新刊リストを抽出して整形してください。\n\n---\n${calendarMarkdown}\n---`
     : `現在（${today}時点）の百合漫画新刊リストを取得して整形してください。`;
 
-  // firecrawl_scrapeのみに絞ったctxを渡す
+  // web_fetchのみに絞ったctxを渡す
   const shinkanCtx = {
     ...taskCtx,
-    mcpTools: taskCtx.mcpTools.filter((t: any) => t.name === 'firecrawl_scrape'),
+    mcpTools: taskCtx.mcpTools.filter((t: any) => t.name === 'web_fetch'),
   };
   const result = await runAgent(prompt, skill, shinkanCtx);
   console.log('  ✅ 新刊リスト取得完了');

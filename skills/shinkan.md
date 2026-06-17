@@ -15,9 +15,8 @@ yurinavi.comの百合漫画発売日カレンダーから今週・来週の新�
 ## 手順
 
 ### Step 1: カレンダーページを取得
-firecrawl_scrape で以下を取得する：
+web_fetch で以下を取得する：
 - URL: https://yurinavi.com/yuri-calendar/
-- formats: ["markdown"]
 
 ### Step 2: 「百合漫画発売日一覧」セクションを特定
 取得したMarkdownから「百合漫画発売日一覧」という見出し以降のデータを対象とする。

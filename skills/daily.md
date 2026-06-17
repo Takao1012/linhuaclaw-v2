@@ -12,7 +12,7 @@ Bluesky・Reddit・百合ナビから今日の百合漫画関連情報を収集�
 - 「---」で区切られた中間メモは出力しない
 - 最終的な要約結果のみを返す
 - 出力は必ず指定されたフォーマット（## 🌙 や ## 📰 など）から始めること
-- 使用するMCPツール: bluesky-mcp・reddit・firecrawl-mcpのみ
+- 使用するMCPツール: bluesky-mcp・reddit・web-fetch-mcpのみ
 
 ## 手順
 
@@ -31,9 +31,8 @@ search_subreddit で yuri_manga を検索（sort="new", time="day"）
 当日の新着投稿を3〜5件抽出する。
 
 ### Step 3: 百合ナビ 新着ニュース
-firecrawl_scrape で以下を取得する：
+web_fetch で以下を取得する：
 - URL: https://yurinavi.com/news-ichiran/
-- formats: ["markdown"]
 
 本日または昨日の新着記事のみを抽出する（それ以外はスキップ）。
 
